@@ -1,0 +1,40 @@
+name: 'Setup Node.js environment'
+description: 'Installs node 20 and fetched pnpm cache, then runs pnpm install'
+author: 'leon'
+inputs:
+  node-version:
+    description: 'Version Spec of the version to use. Examples: 20.x, 20.4.0, >=20.0.0'
+    default: '20'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Enable NPM Corepack
+      shell: bash
+      run: corepack enable
+
+    - name: Use node.js 20
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Get pnpm store directory
+      id: pnpm-cache
+      shell: bash
+      run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
+    - uses: actions/cache@v4
+      name: Setup pnpm cache
+      with:
+        path: |
+          ${{ env.PNPM_STORE_PATH }}
+          ~/cache
+          ~/.cache
+          !~/cache/exclude
+          !~/.cache/exclude
+        key: ${{ runner.os }}-node20-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: ${{ runner.os }}-node20-pnpm-store-
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile
