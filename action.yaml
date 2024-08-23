@@ -5,6 +5,9 @@ inputs:
   node-version:
     description: 'Version Spec of the version to use. Examples: 20.x, 20.4.0, >=20.0.0'
     default: '20'
+  cache-key:
+    description: 'A key to use for the cache. sometimes you need to bust the cache'
+    default: '1'
 
 runs:
   using: 'composite'
@@ -32,8 +35,8 @@ runs:
           ~/.cache
           !~/cache/exclude
           !~/.cache/exclude
-        key: ${{ runner.os }}-node20-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-        restore-keys: ${{ runner.os }}-node20-pnpm-store-
+        key: ${{ runner.os }}-${{ inputs.node-version }}-${{ inputs.cache-key }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: ${{ runner.os }}-${{ inputs.node-version }}-${{ inputs.cache-key }}-pnpm-
 
     - name: Install dependencies
       shell: bash

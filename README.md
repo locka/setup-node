@@ -8,4 +8,5 @@ Lockas custom locka/setup-node command which uses corepack and pnpm to do quick 
 - uses: locka/setup-node@v1
   with:
     node-version: '20'
+    cache-key: '1'
 ```
