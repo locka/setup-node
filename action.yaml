@@ -4,7 +4,7 @@ author: 'leon'
 inputs:
   node-version:
     description: 'Version Spec of the version to use. Examples: 20.x, 20.4.0, >=20.0.0'
-    default: '20'
+    default: '22'
   cache-key:
     description: 'A key to use for the cache. sometimes you need to bust the cache'
     default: '1'
@@ -20,23 +20,7 @@ runs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.node-version }}
-
-    - name: Get pnpm store directory
-      id: pnpm-cache
-      shell: bash
-      run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
-
-    - uses: actions/cache@v4
-      name: Setup pnpm cache
-      with:
-        path: |
-          ${{ env.PNPM_STORE_PATH }}
-          ~/cache
-          ~/.cache
-          !~/cache/exclude
-          !~/.cache/exclude
-        key: ${{ runner.os }}-${{ inputs.node-version }}-${{ inputs.cache-key }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-        restore-keys: ${{ runner.os }}-${{ inputs.node-version }}-${{ inputs.cache-key }}-pnpm-
+        cache: 'pnpm'
 
     - name: Install dependencies
       shell: bash
