@@ -14,9 +14,9 @@ runs:
   steps:
     - name: Enable NPM Corepack
       shell: bash
-      run: npm install -g corepack && corepack enable
+      run: npm install -g corepack
 
-    - name: Use node.js 20
+    - name: Use node.js 22
       uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.node-version }}
